@@ -2,6 +2,9 @@ from flask import Flask
 from src.controller.colaborador_controller import bp_colaborador
 from src.model import db
 from config import Config
+import pymysql
+
+pymysql.install_as_MySQLdb()  # Esta linha é crucial!
 
 def create_app():
     app = Flask(__name__)
