@@ -6,28 +6,16 @@ from flask_cors import cross_origin
 
 bp_colaborador = Blueprint("colaborador", __name__, url_prefix="/colaborador")
 
-dados = [
-        {"id": 1, "nome": "maique", "cargo": "dev senior", "cracha": "00011"},
-        {"id": 2, "nome": "lucas", "cargo": "dev jr", "cracha": "00012"},
-        {"id": 3, "nome": "mauro", "cargo": "dev jr", "cracha": "00013"},
-        {"id": 4, "nome": "karla", "cargo": "dev pleno", "cracha": "00014"},
-        {"id": 5, "nome": "bruno", "cargo": "dev pleno", "cracha": "00015"},
-    ]
 
-@bp_colaborador.route("/pegar-dados")
-def pegar_dados():
-    colaboradores = Colaborador.query.all()
-    resultado = []
-    for c in colaboradores:
-        resultado.append({
-            "id": c.id,
-            "nome": c.nome,
-            "email": c.email,
-            "senha": c.senha,
-            "cargo": c.cargo,
-            "salario": c.salario
-        })
-    return jsonify(resultado)
+@bp_colaborador.route("/todos-colaboradores")
+def pegar_dados_todos_colaboradores():
+    colaboradores = db.session.execute(
+        db.select(Colaborador)
+    ).scalars().all()
+    
+    colaboradores = [colaborador.all_data() for colaborador in colaboradores]
+    
+    return jsonify(colaboradores), 200
 
 @bp_colaborador.route("/cadastrar", methods=["POST"])
 def cadastrar_novo_colaborador():
@@ -49,16 +37,17 @@ def cadastrar_novo_colaborador():
 def atualizar_dados_do_colaborador(id_colaborador):
     dados_requisicao = request.get_json()
     
-    for colaborador in dados:
-        if colaborador["id"] == id_colaborador:
-            colaborador_encontrado = colaborador
-            break
+    colaborador = Colaborador.query.get(id_colaborador)
+    if not colaborador:
+        return jsonify({"mensagem": "Colaborador não encontrado"}), 404
     if "nome" in dados_requisicao:
-        colaborador_encontrado["nome"] = dados_requisicao["nome"]
+        colaborador.nome = dados_requisicao["nome"]
     if "cargo" in dados_requisicao:
-        colaborador_encontrado["cargo"] = dados_requisicao["cargo"]
+        colaborador.cargo = dados_requisicao["cargo"]
     if "senha" in dados_requisicao:
-        colaborador_encontrado["senha"] = hash_senha(dados_requisicao["senha"])
+        colaborador.senha = hash_senha(dados_requisicao["senha"])
+        
+    db.session.commit()
             
     return jsonify({"mensagem": "Dados do colaborador atualizados com sucesso!"}), 200
 

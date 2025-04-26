@@ -7,7 +7,7 @@ class Colaborador(db.Model):
     #nome = VARCHAR(100)
     nome = Column(String(100))
     email = Column(String(100))
-    senha = Column(String(50))
+    senha = Column(String(255))
     cargo = Column(String(100))
     salario = Column(DECIMAL(10,2))
     
@@ -25,4 +25,13 @@ class Colaborador(db.Model):
             'nome': self.nome,
             'cargo': self.cargo
         }
+        
+    def all_data(self) -> dict:
+        return {
+            'id': self.id,
+            'nome': self.nome,
+            'cargo': self.cargo,
+            'salario': self.salario,
+            'email': self.email
+        }     
         
