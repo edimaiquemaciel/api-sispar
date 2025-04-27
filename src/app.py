@@ -3,7 +3,7 @@ from src.controller.colaborador_controller import bp_colaborador
 from src.model import db
 from config import Config
 import pymysql
-import os  # Adicione esta linha
+import os
 
 pymysql.install_as_MySQLdb()
 
@@ -19,7 +19,8 @@ def create_app():
     
     return app
 
-# Adicione este bloco no final do arquivo:
+# Crie a instância da aplicação no nível do módulo
+app = create_app()
+
 if __name__ == "__main__":
-    app = create_app()
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
