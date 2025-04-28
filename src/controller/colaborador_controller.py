@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify
 from src.model.colaborador_model import Colaborador
 from src.model import db
 from src.security.security import hash_senha, checar_senha
-from flask_cors import cross_origin
 
 bp_colaborador = Blueprint("colaborador", __name__, url_prefix="/colaborador")
 
@@ -52,7 +51,6 @@ def atualizar_dados_do_colaborador(id_colaborador):
     return jsonify({"mensagem": "Dados do colaborador atualizados com sucesso!"}), 200
 
 @bp_colaborador.route('/login', methods=['POST'])
-@cross_origin()
 def login():
     dados_requisicao = request.get_json()
     email = dados_requisicao.get('email')
@@ -73,4 +71,4 @@ def login():
     if email == colaborador.get('email') and checar_senha(senha, colaborador.get('senha')):
         return jsonify({"mensagem": "Login realizado com sucesso", "nome": colaborador.get('nome') , "email": colaborador.get('email'), "cargo": colaborador.get('cargo')}), 200
     else:
-        return jsonify({'mensagem': 'Credenciais invalidas'})
+        return jsonify({'mensagem': 'Credenciais invalidas'}), 401
