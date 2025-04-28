@@ -11,7 +11,12 @@ pymysql.install_as_MySQLdb()
 def create_app():
     app = Flask(__name__)
     app.register_blueprint(bp_colaborador)
-    CORS(app)
+    CORS(app, resources={r"/*": {
+    "origins": "*",
+    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "allow_headers": ["Content-Type", "Authorization", "Accept"],
+    "supports_credentials": True  # Se precisar enviar cookies ou autenticação
+}})
     
     app.config.from_object(Config)
     db.init_app(app)
