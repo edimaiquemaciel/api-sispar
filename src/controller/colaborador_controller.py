@@ -19,10 +19,18 @@ def pegar_dados_todos_colaboradores():
 @bp_colaborador.route("/cadastrar", methods=["POST"])
 def cadastrar_novo_colaborador():
     dados_requisicao = request.get_json()
+    email = dados_requisicao["email"]
+    
+    colaborador =db.session.execute(
+        db.select(Colaborador).where(Colaborador.email == email)
+    ).scalar()
+    
+    if colaborador:
+        return  jsonify({"mensagem": "Já existe um colaborador com esse e-mail."}), 400
     
     novo_colaborador = Colaborador(
         nome=dados_requisicao["nome"],
-        email=dados_requisicao["email"],
+        email=email,
         senha=hash_senha(dados_requisicao["senha"]),
         cargo=dados_requisicao["cargo"],
         salario=dados_requisicao["salario"]
