@@ -33,7 +33,11 @@ def cadastrar_novo_colaborador():
         email=email,
         senha=hash_senha(dados_requisicao["senha"]),
         cargo=dados_requisicao["cargo"],
-        salario=dados_requisicao["salario"]
+        salario=dados_requisicao["salario"],
+        telefone=dados_requisicao["telefone"],
+        cep=dados_requisicao["cep"],
+        endereco=dados_requisicao["endereco"],
+        cidade=dados_requisicao["cidade"]
     )
     db.session.add(novo_colaborador)    
     db.session.commit()
