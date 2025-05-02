@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from src.model.colaborador_model import Colaborador
 from src.model import db
 from src.security.security import hash_senha, checar_senha
+from flask_cors import cross_origin
 
 bp_colaborador = Blueprint("colaborador", __name__, url_prefix="/colaborador")
 
@@ -16,7 +17,8 @@ def pegar_dados_todos_colaboradores():
     
     return jsonify(colaboradores), 200
 
-@bp_colaborador.route("/cadastrar", methods=["POST"])
+@bp_colaborador.route("/cadastrar", methods=['POST', 'OPTIONS'])
+@cross_origin()
 def cadastrar_novo_colaborador():
     dados_requisicao = request.get_json()
     email = dados_requisicao["email"]
@@ -63,6 +65,7 @@ def atualizar_dados_do_colaborador(id_colaborador):
     return jsonify({"mensagem": "Dados do colaborador atualizados com sucesso!"}), 200
 
 @bp_colaborador.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     dados_requisicao = request.get_json()
     email = dados_requisicao.get('email')
