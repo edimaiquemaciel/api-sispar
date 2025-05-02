@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from src.model.colaborador_model import Colaborador
 from src.model import db
 from src.security.security import hash_senha, checar_senha
+from flask_cors import cross_origin
 
 bp_colaborador = Blueprint("colaborador", __name__, url_prefix="/colaborador")
 
@@ -16,16 +17,29 @@ def pegar_dados_todos_colaboradores():
     
     return jsonify(colaboradores), 200
 
-@bp_colaborador.route("/cadastrar", methods=["POST"])
+@bp_colaborador.route("/cadastrar", methods=['POST', 'OPTIONS'])
+@cross_origin()
 def cadastrar_novo_colaborador():
     dados_requisicao = request.get_json()
+    email = dados_requisicao["email"]
+    
+    colaborador =db.session.execute(
+        db.select(Colaborador).where(Colaborador.email == email)
+    ).scalar()
+    
+    if colaborador:
+        return  jsonify({"mensagem": "Já existe um colaborador com esse e-mail."}), 400
     
     novo_colaborador = Colaborador(
         nome=dados_requisicao["nome"],
-        email=dados_requisicao["email"],
+        email=email,
         senha=hash_senha(dados_requisicao["senha"]),
         cargo=dados_requisicao["cargo"],
-        salario=dados_requisicao["salario"]
+        salario=dados_requisicao["salario"],
+        telefone=dados_requisicao["telefone"],
+        cep=dados_requisicao["cep"],
+        endereco=dados_requisicao["endereco"],
+        cidade=dados_requisicao["cidade"]
     )
     db.session.add(novo_colaborador)    
     db.session.commit()
@@ -51,6 +65,7 @@ def atualizar_dados_do_colaborador(id_colaborador):
     return jsonify({"mensagem": "Dados do colaborador atualizados com sucesso!"}), 200
 
 @bp_colaborador.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     dados_requisicao = request.get_json()
     email = dados_requisicao.get('email')

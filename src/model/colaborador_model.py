@@ -10,13 +10,21 @@ class Colaborador(db.Model):
     senha = Column(String(255))
     cargo = Column(String(100))
     salario = Column(DECIMAL(10,2))
+    telefone = Column(String(20))
+    cep = Column(String(10))     
+    endereco = Column(String(150))
+    cidade = Column(String(100))
     
-    def __init__(self, nome, email, senha, cargo, salario):
+    def __init__(self, nome, email, senha, cargo, salario, telefone, cep, endereco, cidade):
         self.nome = nome
         self.email = email
         self.senha = senha
         self.cargo = cargo
         self.salario = salario
+        self.telefone = telefone
+        self.cep = cep
+        self.endereco = endereco
+        self.cidade = cidade
         
     def to_dict(self) -> dict:
         return {
@@ -32,6 +40,10 @@ class Colaborador(db.Model):
             'nome': self.nome,
             'cargo': self.cargo,
             'salario': self.salario,
-            'email': self.email
+            'email': self.email,
+            'telefone': self.telefone,
+            'cep': self.cep,
+            'endereco': self.endereco,
+            'cidade': self.cidade
         }     
         
