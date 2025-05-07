@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 from src.model import db
 from src.model.reembolso_model import Reembolso
 from flask_jwt_extended import jwt_required
+from flask_cors import cross_origin
 
 
 bp_reembolso = Blueprint("reembolso", __name__, url_prefix="/reembolso")
@@ -19,6 +20,7 @@ def pegar_todos_reembolsos():
     return jsonify(reembolsos), 200
 
 @bp_reembolso.route("/solicitar-reembolso", methods=["POST"])
+@cross_origin()
 @jwt_required()
 def solicitar_novo_reembolso():
     dados_requisicao = request.get_json()

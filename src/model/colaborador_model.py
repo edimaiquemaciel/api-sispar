@@ -31,7 +31,8 @@ class Colaborador(db.Model):
             'email': self.email,
             'senha': self.senha,
             'nome': self.nome,
-            'cargo': self.cargo
+            'cargo': self.cargo,
+            'id': self.id
         }
         
     def all_data(self) -> dict:

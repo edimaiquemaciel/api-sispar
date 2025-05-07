@@ -97,6 +97,6 @@ def login():
     
     if email == colaborador.get('email') and checar_senha(senha, colaborador.get('senha')):
         access_token = create_access_token(identity=email)
-        return jsonify({"mensagem": "Login realizado com sucesso", "nome": colaborador.get('nome') , "email": colaborador.get('email'), "cargo": colaborador.get('cargo'), "token": access_token}), 200
+        return jsonify({"mensagem": "Login realizado com sucesso", "nome": colaborador.get('nome') , "email": colaborador.get('email'), "cargo": colaborador.get('cargo'), "id": colaborador.get('id'), "token": access_token}), 200
     else:
         return jsonify({'mensagem': 'Credenciais invalidas'}), 401
