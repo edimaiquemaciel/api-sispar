@@ -39,8 +39,31 @@ def create_app():
     jwt = JWTManager(app)
     
     db.init_app(app)
+    swagger_template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "API Colaboradores",
+        "description": "Documentação da API de Colaboradores e Reembolsos",
+        "version": "1.0.0"
+    },
+    "securityDefinitions": {
+        "bearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Digite: Bearer [seu_token]"
+        }
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
+}
+
+
     
-    Swagger(app, config=swagger_config)
+    Swagger(app, config=swagger_config, template=swagger_template)
     
     with app.app_context():
         db.create_all()

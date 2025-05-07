@@ -1,0 +1,57 @@
+tags:
+  - Colaborador
+summary: Atualiza dados de um colaborador
+description: |
+  Atualiza os dados de um colaborador específico pelo ID.  
+  Requer autenticação JWT e o colaborador só pode atualizar os próprios dados.  
+  Campos aceitos: nome, cargo, senha.
+security:
+  - bearerAuth: []
+parameters:
+  - name: id_colaborador
+    in: path
+    required: true
+    type: integer
+    description: ID do colaborador a ser atualizado
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: "Maria Oliveira"
+        cargo:
+          type: string
+          example: "Analista de Dados"
+        senha:
+          type: string
+          example: "novaSenha123"
+responses:
+  200:
+    description: Dados atualizados com sucesso
+    schema:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: "Dados do colaborador atualizados com sucesso!"
+  403:
+    description: Acesso não autorizado para editar este colaborador
+    schema:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: "Você não tem permissão para atualizar esses dados"
+  404:
+    description: Colaborador não encontrado
+    schema:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: "Colaborador não encontrado"
+  400:
+    description: Erro de validação

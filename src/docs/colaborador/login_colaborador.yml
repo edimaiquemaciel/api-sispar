@@ -1,0 +1,66 @@
+tags:
+  - Colaborador
+description: Endpoint para realizar login do colaborador
+
+parameters:
+  - in: body
+    name: credenciais
+    required: true
+    schema:
+      type: object
+      properties:
+        email:
+          type: string
+          example: email@email.com
+        senha:
+          type: string
+          example: senha123
+      required:
+        - email
+        - senha
+
+responses:
+  200:
+    description: Login realizado com sucesso
+    schema:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: Login realizado com sucesso
+        nome:
+          type: string
+          example: Joao da Silva
+        email:
+          type: string
+          example: email@email.com
+        cargo:
+          type: string
+          example: QA
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  400:
+    description: Dados incompletos
+    schema:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: Todos os dados precisam ser preenchidos
+  401:
+    description: Credenciais inválidas
+    schema:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: Credenciais invalidas
+  404:
+    description: Usuário não encontrado
+    schema:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: Usuário não encontrado

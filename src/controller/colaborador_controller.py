@@ -11,6 +11,7 @@ bp_colaborador = Blueprint("colaborador", __name__, url_prefix="/colaborador")
 
 @bp_colaborador.route("/todos-colaboradores")
 @jwt_required()
+@swag_from('../docs/colaborador/buscar_colaborador.yml')
 def pegar_dados_todos_colaboradores():
     colaboradores = db.session.execute(
         db.select(Colaborador)
@@ -52,6 +53,7 @@ def cadastrar_novo_colaborador():
 
 @bp_colaborador.route("/atualizar/<int:id_colaborador>", methods=["PUT"])
 @jwt_required()
+@swag_from('../docs/colaborador/atualizar_colaborador.yml')
 def atualizar_dados_do_colaborador(id_colaborador):
     dados_requisicao = request.get_json()
     
@@ -75,6 +77,7 @@ def atualizar_dados_do_colaborador(id_colaborador):
 
 @bp_colaborador.route('/login', methods=['POST'])
 @cross_origin()
+@swag_from('../docs/colaborador/login_colaborador.yml')
 def login():
     dados_requisicao = request.get_json()
     email = dados_requisicao.get('email')
