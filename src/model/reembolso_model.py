@@ -1,7 +1,7 @@
 from src.model import db
 from sqlalchemy .schema import Column
 from sqlalchemy.types import Integer, String, DECIMAL, DATE
-from sqlalchemy import func
+from sqlalchemy import text
 from sqlalchemy import ForeignKey
 
 class Reembolso(db.Model):
@@ -10,7 +10,7 @@ class Reembolso(db.Model):
     empresa = Column(String(50), nullable=False)
     num_prestacao = Column(Integer, nullable=False)
     descricao = Column(String(255))
-    data = Column(DATE, server_default=func.current_date(), nullable=False)
+    data = Column(DATE, server_default=text("CURDATE()"), nullable=False)
     tipo_reembolso = Column(String(35), nullable=False)
     centro_custo = Column(String(50), nullable=False)
     ordem_interna = Column(String(50))
@@ -21,7 +21,7 @@ class Reembolso(db.Model):
     valor_km = Column(String(50))
     valor_faturado = Column(DECIMAL(10,2), nullable=False)
     despesa = Column(DECIMAL(10,2))
-    id_colaborador = Column(Integer, ForeignKey(column='colaborador.id'))
+    id_colaborador = Column(Integer, ForeignKey('colaborador.id'))
     status = Column(String(25))
     
 
@@ -43,4 +43,25 @@ class Reembolso(db.Model):
         self.despesa=despesa
         self.id_colaborador=id_colaborador
         self.status=status
-    
+        
+    def all_data(self) -> dict:
+        return {
+            'id': self.id,
+            'colaborador': self.colaborador,
+            'empresa': self.empresa,
+            'num_prestacao': self.num_prestacao,
+            'descricao': self.descricao,
+            'data': self.data,
+            'tipo_reembolso': self.tipo_reembolso,
+            'centro_custo': self.centro_custo,
+            'ordem_interna': self.ordem_interna,
+            'divisao': self.divisao,
+            'pep': self.pep,
+            'moeda': self.moeda,
+            'distancia_km': self.distancia_km,
+            'valor_km': self.valor_km,
+            'valor_faturado': self.valor_faturado,
+            'despesa': self.despesa,
+            'id_colaborador': self.id_colaborador,
+            'status': self.status
+        }
