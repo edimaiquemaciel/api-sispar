@@ -13,6 +13,7 @@ load_dotenv()
 
 pymysql.install_as_MySQLdb()
 
+
 swagger_config = {
     
     "headers": [],
