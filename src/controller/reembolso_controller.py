@@ -25,44 +25,57 @@ def pegar_todos_reembolsos():
 def solicitar_novo_reembolso():
     dados_requisicao = request.get_json()
     
+    if not isinstance(dados_requisicao, list):
+        return jsonify({'erro': 'Esperado um array de reembolsos no corpo da requisição'}), 400
+    if not dados_requisicao:
+        return jsonify({'erro': 'O array de reembolsos está vazio'}), 400
+    
     CAMPOS_OBRIGATORIOS = [
     'colaborador', 'empresa', 'num_prestacao',
     'tipo_reembolso', 'centro_custo', 'moeda',
     'valor_faturado', 'despesa', 'id_colaborador'
     ]
     
-    faltando = [campo for campo in CAMPOS_OBRIGATORIOS if campo not in dados_requisicao]
-    if faltando:
-        return jsonify({'erro': f'Campos obrigatórios ausentes: {", ".join(faltando)}'}), 400
-
-    try:
-        novo_reembolso = Reembolso(
-            colaborador=dados_requisicao["colaborador"],
-            empresa=dados_requisicao["empresa"],
-            num_prestacao=dados_requisicao["num_prestacao"],
-            descricao=dados_requisicao.get("descricao"),
-            data=dados_requisicao.get("data"),
-            tipo_reembolso=dados_requisicao["tipo_reembolso"],
-            centro_custo=dados_requisicao["centro_custo"],
-            ordem_interna=dados_requisicao.get("ordem_interna"),
-            divisao=dados_requisicao.get("divisao"),
-            pep=dados_requisicao.get("pep"),
-            moeda=dados_requisicao["moeda"],
-            distancia_km=dados_requisicao.get("distancia_km"),
-            valor_km=dados_requisicao.get("valor_km"),
-            valor_faturado=dados_requisicao["valor_faturado"],
-            despesa=dados_requisicao["despesa"],
-            id_colaborador=dados_requisicao["id_colaborador"],
-            status=dados_requisicao.get("status", "Em análise")
-        )
+    reembolsos_criados = []
     
-        db.session.add(novo_reembolso)
+    try:
+        for dados in dados_requisicao:
+            faltando = [campo for campo in CAMPOS_OBRIGATORIOS if campo not in dados]
+            if faltando:
+                raise ValueError(f"Campos obrigatórios ausentes em um dos reembolsos: {', '.join(faltando)}")
+            novo_reembolso = Reembolso(
+                colaborador=dados["colaborador"],
+                empresa=dados["empresa"],
+                num_prestacao=dados["num_prestacao"],
+                descricao=dados.get("descricao"),
+                data=dados.get("data") or None,
+                tipo_reembolso=dados["tipo_reembolso"],
+                centro_custo=dados["centro_custo"],
+                ordem_interna=dados.get("ordem_interna"),
+                divisao=dados.get("divisao"),
+                pep=dados.get("pep"),
+                moeda=dados["moeda"],
+                distancia_km=dados.get("distancia_km"),
+                valor_km=dados.get("valor_km"),
+                valor_faturado=dados["valor_faturado"],
+                despesa=dados["despesa"],
+                id_colaborador=dados["id_colaborador"],
+                status=dados.get("status", "Em análise")
+            )
+    
+            db.session.add(novo_reembolso)
+            reembolsos_criados.append(novo_reembolso)
+            
         db.session.commit()
         
         return jsonify({
                 'mensagem': 'Solicitação de reembolso cadastrada com sucesso',
-                'reembolso': novo_reembolso.all_data()
+                'reembolso': [r.all_data() for r in reembolsos_criados]
             }), 201
+        
+    except ValueError as ve:
+        db.session.rollback()
+        return jsonify({'erro': str(ve)}), 400    
     except Exception as e:
         db.session.rollback()
         return jsonify({'erro': str(e)}), 500
