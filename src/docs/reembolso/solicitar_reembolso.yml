@@ -1,0 +1,85 @@
+tags:
+  - Reembolso
+description: Endpoint para solicitar um novo reembolso (um ou mais por vez)
+
+parameters:
+  - in: body
+    name: corpo
+    required: true
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          colaborador:
+            type: string
+            example: João da Silva
+          empresa:
+            type: string
+            example: Empresa X
+          num_prestacao:
+            type: integer
+            example: 101
+          descricao:
+            type: string
+            example: Reembolso de viagem a trabalho
+          data:
+            type: string
+            format: date
+            example: "2025-05-01"
+          tipo_reembolso:
+            type: string
+            example: Transporte
+          centro_custo:
+            type: string
+            example: CC-123
+          ordem_interna:
+            type: string
+            example: OI-456
+          divisao:
+            type: string
+            example: Comercial
+          pep:
+            type: string
+            example: PEP001
+          moeda:
+            type: string
+            example: BRL
+          distancia_km:
+            type: string
+            example: "30"
+          valor_km:
+            type: string
+            example: "1.50"
+          valor_faturado:
+            type: number
+            example: 200.00
+          despesa:
+            type: number
+            example: 75.50
+          id_colaborador:
+            type: integer
+            example: 3
+          status:
+            type: string
+            example: Em análise
+        required:
+          - colaborador
+          - empresa
+          - num_prestacao
+          - tipo_reembolso
+          - centro_custo
+          - moeda
+          - valor_faturado
+          - despesa
+          - id_colaborador
+
+responses:
+  201:
+    description: Solicitação de reembolso cadastrada com sucesso
+  400:
+    description: Erro na requisição ou campos obrigatórios ausentes
+  401:
+    description: Token JWT ausente ou inválido
+  500:
+    description: Erro interno no servidor

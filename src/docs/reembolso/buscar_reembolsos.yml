@@ -1,0 +1,84 @@
+tags:
+  - Reembolso
+summary: Lista todos os reembolsos
+description: Retorna todos os reembolsos cadastrados (requer autenticação JWT)
+security:
+  - bearerAuth: []
+responses:
+  200:
+    description: Lista de reembolsos retornada com sucesso
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            sucesso:
+              type: boolean
+              example: true
+            total:
+              type: integer
+              example: 3
+            dados:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  colaborador:
+                    type: string
+                    example: "João da Silva"
+                  empresa:
+                    type: string
+                    example: "Empresa X"
+                  num_prestacao:
+                    type: integer
+                    example: 101
+                  descricao:
+                    type: string
+                    example: "Deslocamento para reunião externa"
+                  data:
+                    type: string
+                    format: date
+                    example: "2025-05-01"
+                  tipo_reembolso:
+                    type: string
+                    example: "Transporte"
+                  centro_custo:
+                    type: string
+                    example: "CC-120"
+                  ordem_interna:
+                    type: string
+                    example: "OI-789"
+                  divisao:
+                    type: string
+                    example: "Financeiro"
+                  pep:
+                    type: string
+                    example: "PEP12345"
+                  moeda:
+                    type: string
+                    example: "BRL"
+                  distancia_km:
+                    type: string
+                    example: "25"
+                  valor_km:
+                    type: string
+                    example: "1.20"
+                  valor_faturado:
+                    type: number
+                    format: float
+                    example: 150.00
+                  despesa:
+                    type: number
+                    format: float
+                    example: 50.00
+                  id_colaborador:
+                    type: integer
+                    example: 5
+                  status:
+                    type: string
+                    example: "Aprovado"
+  401:
+    description: Token JWT ausente ou inválido

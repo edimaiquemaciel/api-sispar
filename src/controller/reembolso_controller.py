@@ -4,12 +4,14 @@ from src.model import db
 from src.model.reembolso_model import Reembolso
 from flask_jwt_extended import jwt_required
 from flask_cors import cross_origin
+from flasgger import swag_from
 
 
 bp_reembolso = Blueprint("reembolso", __name__, url_prefix="/reembolso")
 
 @bp_reembolso.route("/todos-reembolsos")
 @jwt_required()
+@swag_from('../docs/reembolso/buscar_reembolsos.yml')
 def pegar_todos_reembolsos():
     reembolsos = db.session.execute(
         db.select(Reembolso)
@@ -17,11 +19,16 @@ def pegar_todos_reembolsos():
     
     reembolsos = [reembolso.all_data() for reembolso in reembolsos]
     
-    return jsonify(reembolsos), 200
+    return jsonify({
+        'sucesso': True,
+        'total': len(reembolsos),
+        'dados': reembolsos
+    }), 200
 
 @bp_reembolso.route("/solicitar-reembolso", methods=["POST"])
 @cross_origin()
 @jwt_required()
+@swag_from('../docs/reembolso/solicitar_reembolso.yml')
 def solicitar_novo_reembolso():
     dados_requisicao = request.get_json()
     
@@ -82,6 +89,7 @@ def solicitar_novo_reembolso():
     
 @bp_reembolso.route("/reembolsos-prestacao/<int:num_prestacao>")
 @jwt_required()
+@swag_from('../docs/reembolso/buscar_num_prestacao.yml')
 def pegar_reembolso_por_prestacao(num_prestacao):
     reembolsos = Reembolso.query.filter_by(num_prestacao=num_prestacao).all()
     

@@ -1,0 +1,93 @@
+tags:
+  - Reembolso
+summary: Buscar reembolsos por número de prestação
+description: Retorna todos os reembolsos vinculados a um número de prestação de contas (requer autenticação JWT)
+
+parameters:
+  - name: num_prestacao
+    in: path
+    required: true
+    description: Número da prestação de contas para buscar reembolsos
+    schema:
+      type: integer
+      example: 101
+
+security:
+  - bearerAuth: []
+
+responses:
+  200:
+    description: Reembolsos encontrados com sucesso
+    schema:
+      type: object
+      properties:
+        sucesso:
+          type: boolean
+          example: true
+        total:
+          type: integer
+          example: 2
+        dados:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              colaborador:
+                type: string
+                example: João Silva
+              empresa:
+                type: string
+                example: Empresa X
+              num_prestacao:
+                type: integer
+                example: 101
+              descricao:
+                type: string
+                example: Reembolso de viagem
+              data:
+                type: string
+                format: date
+                example: "2025-05-01"
+              tipo_reembolso:
+                type: string
+                example: Transporte
+              centro_custo:
+                type: string
+                example: CC-123
+              ordem_interna:
+                type: string
+                example: OI-456
+              divisao:
+                type: string
+                example: Comercial
+              pep:
+                type: string
+                example: PEP001
+              moeda:
+                type: string
+                example: BRL
+              distancia_km:
+                type: string
+                example: "25"
+              valor_km:
+                type: string
+                example: "1.5"
+              valor_faturado:
+                type: number
+                example: 150.00
+              despesa:
+                type: number
+                example: 50.00
+              id_colaborador:
+                type: integer
+                example: 3
+              status:
+                type: string
+                example: Em análise
+  404:
+    description: Nenhum reembolso encontrado para o número de prestação informado
+  401:
+    description: Token JWT ausente ou inválido
