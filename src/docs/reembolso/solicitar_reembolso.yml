@@ -59,7 +59,7 @@ parameters:
             example: 75.50
           id_colaborador:
             type: integer
-            example: 3
+            example: 1
           status:
             type: string
             example: Em análise
